@@ -1,4 +1,5 @@
 import gym
+import d4rl
 
 from agent import AWRAgent
 from models.actor import Actor
@@ -40,7 +41,7 @@ hyper_ps = {
 }
 
 # configuring the environment
-environment = gym.make('hopper-expert-v2')
+environment = gym.make("ant-expert-v0")
 # environment._max_episode_steps = 600
 
 # setting up the training components
