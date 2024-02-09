@@ -40,7 +40,7 @@ hyper_ps = {
 }
 
 # configuring the environment
-environment = gym.make('Humanoid-v3')
+environment = gym.make('hopper-expert-v2')
 # environment._max_episode_steps = 600
 
 # setting up the training components
