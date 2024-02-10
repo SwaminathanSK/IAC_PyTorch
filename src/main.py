@@ -44,10 +44,16 @@ hyper_ps = {
 environment = gym.make("ant-expert-v0")
 # environment._max_episode_steps = 600
 
+behavioural = AWRAgent
+actor = Actor()
+critic = Critic()
+
 # setting up the training components
 agent = AWRAgent
 actor = Actor()
 critic = Critic()
+
+
 
 # training and testing
 Training.train(
