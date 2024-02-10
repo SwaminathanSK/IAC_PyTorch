@@ -12,7 +12,7 @@ import torch
 from utilities import pytorch_util as ptu
 
 from utilities import utils
-# from deeprl.infrastructure.logger import Logger
+from utilities.logger import Logger
 
 # from deeprl.agents.dqn_agent import DQNAgent
 # from deeprl.agents.ac_agent import ACAgent
@@ -36,7 +36,7 @@ class RL_Trainer(object):
 
         # Get params, create logger
         self.params = params
-        # self.logger = Logger(self.params['logdir'])
+        self.logger = Logger(self.params['logdir'])
 
         # Set random seeds
         seed = self.params['seed']
