@@ -54,7 +54,7 @@ class RL_Trainer(object):
         # Make the gym environment
         # register_custom_envs() ### MAKE THE ENVIRONMENT HERE
         print(self.params['env_name'])
-        self.env = gym.make("ant-expert-v1")
+        self.env = gym.make("halfcheetah-expert-v2")
         self.dataset = self.env.get_dataset()
         if 'env_wrappers' in self.params:
             # These operations are currently only for Atari envs

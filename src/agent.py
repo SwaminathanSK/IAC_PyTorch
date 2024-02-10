@@ -22,15 +22,19 @@ from torch.autograd import Variable
 from torchvision import transforms
 from src.utilities.prioritized_memory import Memory
 import math
+import pickle
 
 
 class AWRAgent:
+
+    with open("bc_policy.pkl", "wb") as file:
+        beta_policy = pickle.load(file)
 
     name = "awr"
     # memory = []
 
     @staticmethod
-    def train(models, environment, hyper_ps, debug_type, writer, beta_policy=None):
+    def train(models, environment, hyper_ps, debug_type, writer, beta_policy=beta_policy):
         assert len(models) == 2, "AWR needs exactly two models to function properly."
         actor, critic = models
 
@@ -54,6 +58,9 @@ class AWRAgent:
         # create prioritized replay memory using SumTree
         memory = Memory(memory_size)
         batch_size = 64
+
+        for i in range(20000):
+            break
 
         # algorithm specifics
         beta = hyper_ps['beta']
@@ -261,12 +268,12 @@ class AWRAgent:
     
     # save sample (error,<s,a,r,s'>) to the replay memory
     @staticmethod
-    def append_sample(state, action, reward, next_state, done, memory, beta_policy=None, current_policy=None):
+    def append_sample(state, action, reward, next_state, done, memory):
 
-        rho = AWRAgent.get_policy_density(current_policy, action, state)-AWRAgent.get_policy_density(beta_policy, action, state, 1)
-        rho = math.exp(rho)
+        # rho = AWRAgent.get_policy_density(current_policy, action, state)-AWRAgent.get_policy_density(beta_policy, action, state, 1)
+        # rho = math.exp(rho)
 
-        memory.add(rho, (state, action, reward, next_state, done))
+        memory.add(1, (state, action, reward, next_state, done))
         return memory
 
     @staticmethod
