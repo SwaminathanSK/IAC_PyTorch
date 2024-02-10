@@ -343,7 +343,7 @@ def convert_listofrollouts(paths):
         and return separate arrays,
         where each array is a concatenation of that array from across the rollouts
     """
-    observations = paths["observation"]
+    observations = paths["observations"]
     actions = paths["action"]
     next_observations = np.concatenate([path["next_observation"] for path in paths])
     terminals = np.concatenate([path["terminal"] for path in paths])
