@@ -340,11 +340,11 @@ class RL_Trainer(object):
         # save eval metrics
         if self.logmetrics:
             # returns, for logging
-            train_returns = [path["reward"].sum() for path in paths]
+            train_returns = paths["rewards"].sum()
             eval_returns = [eval_path["reward"].sum() for eval_path in eval_paths]
 
             # episode lengths, for logging
-            train_ep_lens = [len(path["reward"]) for path in paths]
+            train_ep_lens = len(paths["rewards"])
             eval_ep_lens = [len(eval_path["reward"]) for eval_path in eval_paths]
 
             # decide what to log
