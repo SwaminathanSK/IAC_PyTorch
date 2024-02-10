@@ -185,6 +185,8 @@ class RL_Trainer(object):
             # relabel the collected obs with actions from a provided expert policy
             if relabel_with_expert and itr>=start_relabel_with_expert:
                 paths = self.do_relabel_with_expert(expert_policy, paths)
+            
+            train_video_paths = None
 
             # add collected data to replay buffer
             # self.agent.add_to_replay_buffer(paths)
