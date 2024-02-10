@@ -344,11 +344,11 @@ def convert_listofrollouts(paths):
         where each array is a concatenation of that array from across the rollouts
     """
     observations = paths["observations"]
-    actions = paths["action"]
-    next_observations = np.concatenate([path["next_observation"] for path in paths])
-    terminals = np.concatenate([path["terminal"] for path in paths])
-    concatenated_rewards = np.concatenate([path["reward"] for path in paths])
-    unconcatenated_rewards = [path["reward"] for path in paths]
+    actions = paths["actions"]
+    next_observations = paths["next_observations"]
+    terminals = paths["terminals"]
+    concatenated_rewards = paths["rewards"]
+    unconcatenated_rewards = paths["rewards"]
     return observations, actions, next_observations, terminals, concatenated_rewards, unconcatenated_rewards
 
 ############################################
