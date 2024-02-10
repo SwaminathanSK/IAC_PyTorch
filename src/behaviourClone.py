@@ -123,4 +123,4 @@ for seed in range(3):
     bctrainer.run_training_loop()
 
 with open("bc_policy.pkl", "wb") as file:
-    pickle.dump(policy)
+    pickle.dump(policy, file)
