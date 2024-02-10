@@ -8,13 +8,29 @@ from utilities.debug import DebugType
 from utilities.utils import t, nan_in_model, dict_with_default, \
     td_values, mc_values, obs_to_state
 
+import sys
+import gym
+import torch
+import pylab
+import random
+import numpy as np
+from collections import deque
+import torch.nn as nn
+import torch.optim as optim
+import torch.nn.functional as F
+from torch.autograd import Variable
+from torchvision import transforms
+from src.utilities.prioritized_memory import Memory
+import math
+
 
 class AWRAgent:
 
     name = "awr"
+    # memory = []
 
     @staticmethod
-    def train(models, environment, hyper_ps, debug_type, writer):
+    def train(models, environment, hyper_ps, debug_type, writer, beta_policy=None):
         assert len(models) == 2, "AWR needs exactly two models to function properly."
         actor, critic = models
 
@@ -33,6 +49,11 @@ class AWRAgent:
         epoch = 0
         pre_training_epochs = 0
         max_pre_epochs = 150
+
+        memory_size = 20000
+        # create prioritized replay memory using SumTree
+        memory = Memory(memory_size)
+        batch_size = 64
 
         # algorithm specifics
         beta = hyper_ps['beta']
@@ -67,7 +88,40 @@ class AWRAgent:
             writer
         )
 
+        # mini_batch, idxs, is_weights = memory.sample(batch_size)
+
         while epoch < max_epoch_count + pre_training_epochs:
+
+            mini_batch, idxs, is_weights = memory.sample(batch_size)
+            mini_batch = np.array(mini_batch).transpose()
+
+            states = np.vstack(mini_batch[0])
+            actions = mini_batch[1] # removed list()
+            rewards = mini_batch[2] # removed list()
+            next_states = np.vstack(mini_batch[3])
+            dones = mini_batch[4]
+
+            # bool to binary
+            dones = dones.astype(int)
+
+            # Q function of current state
+            states = torch.Tensor(states)
+
+            rhos = AWRAgent.get_policy_density(actor, actions, states)-AWRAgent.get_policy_density(beta_policy, actions, states, 1)
+            rhos = math.exp(rhos)
+
+            # memory = AWRAgent.append_sample()
+            for i in range(batch_size):
+                idx = idxs[i]
+                memory.update(idx, rhos[i])
+            
+            mini_batch, idxs, is_weights = memory.sample(batch_size) # Note that we are sampling from the entire memory
+            states = np.vstack(mini_batch[0])
+            actions = mini_batch[1] # removed list()
+            rewards = mini_batch[2] # removed list()
+            next_states = np.vstack(mini_batch[3])
+            dones = mini_batch[4]
+
             print(f"\nEpoch: {epoch}")
 
             # set actor and critic update steps
@@ -75,15 +129,15 @@ class AWRAgent:
             critic_steps = critic_steps_start + int((critic_steps_end - critic_steps_start) * epoch_percentage)
             actor_steps = actor_steps_start + int((actor_steps_end - actor_steps_start) * epoch_percentage)
 
-            # sampling from env
-            for _ in range(sample_mod):
-                AWRAgent.sample_from_env(
-                    actor,
-                    environment,
-                    debug_full,
-                    exploration=random_exploration and len(states) < replay_fill_threshold * max_buffer_size,
-                    replay_buffers=(states, actions, rewards, dones)
-                )
+            # # sampling from env
+            # for _ in range(sample_mod):
+            #     AWRAgent.sample_from_env(
+            #         actor,
+            #         environment,
+            #         debug_full,
+            #         exploration=random_exploration and len(states) < replay_fill_threshold * max_buffer_size,
+            #         replay_buffers=(states, actions, rewards, dones)
+            #     )
 
             if len(states) < replay_fill_threshold * max_buffer_size:
                 continue
@@ -204,6 +258,16 @@ class AWRAgent:
 
         sample_return /= iterations
         return sample_return
+    
+    # save sample (error,<s,a,r,s'>) to the replay memory
+    @staticmethod
+    def append_sample(state, action, reward, next_state, done, memory, beta_policy=None, current_policy=None):
+
+        rho = AWRAgent.get_policy_density(current_policy, action, state)-AWRAgent.get_policy_density(beta_policy, action, state, 1)
+        rho = math.exp(rho)
+
+        memory.add(rho, (state, action, reward, next_state, done))
+        return memory
 
     @staticmethod
     def sample_from_env(actor_model, env, debug, exploration, replay_buffers):
@@ -244,3 +308,11 @@ class AWRAgent:
     def test(models, environment, hyper_ps, debug_type):
         actor, _ = models
         return AWRAgent.validation_return(actor, environment, hyper_ps, debug_type, hyper_ps['test_iterations'])
+    
+    @staticmethod
+    def get_policy_density(policy_net, action, state, behave = 0):
+        # if behave == 1:
+        #     return policy_net.actor.forward(state).log_prob(action)
+        normal, _ = policy_net.forward(state)
+        return normal.log_prob(action)
+        

@@ -3,7 +3,8 @@ import d4rl
 
 from agent import AWRAgent
 from models.actor import Actor
-from models.critic import Critic
+from src.trash.critic import Critic
+from critics.bootstrapped_continuous_critic import BootstrappedContinuousCritic
 from utilities.debug import DebugType
 from utilities.training import Training
 
@@ -44,15 +45,14 @@ hyper_ps = {
 environment = gym.make("ant-expert-v0")
 # environment._max_episode_steps = 600
 
-behavioural = AWRAgent
-actor = Actor()
-critic = Critic()
+# behavioural = AWRAgent
+# actor = Actor()
+# critic = Critic()
 
 # setting up the training components
 agent = AWRAgent
 actor = Actor()
-critic = Critic()
-
+critic = BootstrappedContinuousCritic()
 
 
 # training and testing

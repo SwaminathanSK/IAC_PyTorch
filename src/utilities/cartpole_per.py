@@ -10,7 +10,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 from torch.autograd import Variable
 from torchvision import transforms
-from prioritized_memory import Memory
+from src.utilities.prioritized_memory import Memory
 
 EPISODES = 500
 
