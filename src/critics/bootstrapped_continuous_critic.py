@@ -120,6 +120,7 @@ class BootstrappedContinuousCritic(Critic):
             returns:
                 training loss
         """
+        print(type(obs))
         obs = ptu.from_numpy(obs)
         acts = ptu.from_numpy(acts)
         # next_obs = ptu.from_numpy(next_obs)
