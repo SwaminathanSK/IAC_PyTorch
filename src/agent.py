@@ -112,7 +112,7 @@ class AWRAgent:
             mini_batch = np.array(mini_batch).transpose()
 
             states = np.vstack(mini_batch[0])
-            actions = list(mini_batch[1]) # removed list()
+            actions = mini_batch[1] # removed list()
             rewards = list(mini_batch[2]) # removed list()
             next_states = np.vstack(mini_batch[3])
             dones = mini_batch[4]
@@ -124,7 +124,7 @@ class AWRAgent:
             states = torch.Tensor(states)
 
             # one-hot encoding
-            a = torch.FloatTensor(actions).view(-1, 1)
+            a = torch.FloatTensor(actions)
 
             # one_hot_action = torch.FloatTensor(2, 6).zero_()
             # one_hot_action.scatter_(1, a, 1)
