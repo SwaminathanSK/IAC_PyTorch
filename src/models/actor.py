@@ -3,6 +3,7 @@ from torch import nn, distributions
 
 from models.model import Model
 from utilities.utils import t
+from utilities import pytorch_util as ptu
 
 
 class Actor(Model):
@@ -29,7 +30,10 @@ class Actor(Model):
 
         self.fc_base = nn.Sequential(*fcs)
         self.fc_mean = nn.Linear(hidden_size, action_dim)
-        self.fc_logsd = nn.Linear(hidden_size, action_dim)
+        # self.fc_logsd = nn.Linear(hidden_size, action_dim)
+        self.logstd = nn.Parameter(
+                torch.zeros(self.ac_dim, dtype=torch.float32, device=ptu.device)
+            )
 
         self.optimiser = torch.optim.SGD(
             lr=hyper_ps['a_learning_rate'],
@@ -40,7 +44,8 @@ class Actor(Model):
     def forward(self, state):
         x = self.fc_base(state)
         mean = self.fc_mean(x)
-        logsd = self.fc_logsd(x)
+        # logsd = self.fc_logsd(x)
+        logsd = torch.clamp(self.logstd, -10, 2) 
         # sd = logsd.exp()
 
         scale_tril = torch.diag(torch.exp(logsd))
