@@ -62,7 +62,7 @@ class AWRAgent:
 
         # for i in range(20000):
         #     break
-        ntraj = 10
+        ntraj = 100
         max_path_length = 100
         paths = utils.sample_n_trajectories(environment, beta_policy, ntraj, max_path_length)
         observations, actions, next_observations, terminals, concatenated_rewards, unconcatenated_rewards = AWRAgent.convert_listofrollouts(paths)
@@ -70,7 +70,7 @@ class AWRAgent:
         for i in range(len(observations)):
             memory = AWRAgent.append_sample(observations[i], actions[i], np.array(concatenated_rewards[i]), next_observations[i], np.array(terminals[i]), memory)
         
-        memory_batch_size = 64
+        memory_batch_size = 6400
 
         # algorithm specifics
         beta = hyper_ps['beta']
