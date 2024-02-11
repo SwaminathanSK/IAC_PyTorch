@@ -55,7 +55,7 @@ class AWRAgent:
         pre_training_epochs = 0
         max_pre_epochs = 150
 
-        memory_size = 5
+        memory_size = 2
         # create prioritized replay memory using SumTree
         memory = Memory(memory_size)
         # batch_size = 5
@@ -67,7 +67,7 @@ class AWRAgent:
         paths = utils.sample_n_trajectories(environment, beta_policy, ntraj, max_path_length)
         observations, actions, next_observations, terminals, concatenated_rewards, unconcatenated_rewards = AWRAgent.convert_listofrollouts(paths)
 
-        for i in range(5):
+        for i in range(2):
             memory = AWRAgent.append_sample(observations[i], actions[i], np.array(concatenated_rewards[i]), next_observations[i], np.array(terminals[i]), memory)
 
         # algorithm specifics
@@ -107,7 +107,7 @@ class AWRAgent:
 
         while epoch < max_epoch_count + pre_training_epochs:
 
-            mini_batch, idxs, is_weights = memory.sample(5)
+            mini_batch, idxs, is_weights = memory.sample(2)
             print(mini_batch)
             mini_batch = np.array(mini_batch).transpose()
 
@@ -127,11 +127,11 @@ class AWRAgent:
             rhos = math.exp(rhos)
 
             # memory = AWRAgent.append_sample()
-            for i in range(5):
+            for i in range(2):
                 idx = idxs[i]
                 memory.update(idx, rhos[i])
             
-            mini_batch, idxs, is_weights = memory.sample(5) # Note that we are sampling from the entire memory
+            mini_batch, idxs, is_weights = memory.sample(2) # Note that we are sampling from the entire memory
             states = np.vstack(mini_batch[0])
             actions = mini_batch[1] # removed list()
             rewards = mini_batch[2] # removed list()
