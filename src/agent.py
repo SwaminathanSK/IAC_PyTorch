@@ -235,7 +235,8 @@ class AWRAgent:
                     normal, _ = actor(t(states[indices]))
                     log_pis = normal.log_prob(t(actions[indices]))
                     print(log_pis)
-                    log_pis = torch.sum(log_pis, dim=1)
+                    # log_pis = torch.sum(log_pis, dim=1)
+                    log_pis = torch.sum(log_pis)
                     log_pis = torch.clamp(log_pis, min=min_log_pi)
 
                     losses = -log_pis * advantage_weights
