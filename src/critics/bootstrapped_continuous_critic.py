@@ -133,7 +133,7 @@ class BootstrappedContinuousCritic(Critic):
         # target_value = ptu.from_numpy(target_value)
         target_value = target_value
 
-        print("Reached here")
+        # print("Reached here")
 
         # q_pred = self.critic_network(torch.cat((obs, acts), dim=-1)).squeeze(1)
         q_pred = self.critic_network(obs)
