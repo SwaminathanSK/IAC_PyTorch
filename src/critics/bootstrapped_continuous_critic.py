@@ -36,16 +36,17 @@ class BootstrappedContinuousCritic(Critic):
         # self.num_target_updates = hparams['num_target_updates']
         # self.num_grad_steps_per_target_update = hparams['num_grad_steps_per_target_update']
         self.gamma = hparams['gamma']
-        self.critic_network = ptu.build_mlp(
-            self.ob_dim + self.ac_dim,
-            1,
-            n_layers=self.n_layers,
-            size=self.size,
-        )
+        # self.critic_network = ptu.build_mlp(
+        #     self.ob_dim + self.ac_dim,
+        #     1,
+        #     n_layers=self.n_layers,
+        #     size=self.size,
+        # )
+        self.critic_network = self.fc
         self.critic_network.to(ptu.device)
         self.target_network = copy.deepcopy(self.critic_network)
-        self.loss = nn.SmoothL1Loss()
-        # self.loss = nn.MSELoss()
+        # self.loss = nn.SmoothL1Loss()
+        self.loss = nn.MSELoss()
         self.optimizer = optim.Adam(
             self.critic_network.parameters(),
             self.learning_rate,
@@ -86,12 +87,12 @@ class BootstrappedContinuousCritic(Critic):
         x_target <- (1-alpha) * x_target + alpha * x_current
         where alpha is self.target_update_rate.
         """
-        # your code here
+        self.target_network.parameters = (1-self.target_update_rate) * self.target_network.parameters + self.target_update_rate * self.critic_network.parameters
         """
         END CODE
         """
 
-    def update(self, obs, acts, next_obs, rewards, terminals, actor):
+    def update(self, obs, acts, next_obs, rewards, terminals, actor, target_value):
         """
             Update the parameters of the critic.
 
@@ -109,12 +110,13 @@ class BootstrappedContinuousCritic(Critic):
         """
         obs = ptu.from_numpy(obs)
         acts = ptu.from_numpy(acts)
-        next_obs = ptu.from_numpy(next_obs)
+        # next_obs = ptu.from_numpy(next_obs)
         rewards = ptu.from_numpy(rewards)
         terminals = ptu.from_numpy(terminals)
 
         q_pred = self.critic_network(torch.cat((obs, acts), dim=-1)).squeeze(1) 
-        target_value = self.compute_target_value(next_obs, rewards, terminals, actor)
+        # target_value = self.compute_target_value(next_obs, rewards, terminals, actor)
+        target_value = target_value
         loss = self.loss(q_pred, target_value.detach())
         self.optimizer.zero_grad()
         loss.backward()

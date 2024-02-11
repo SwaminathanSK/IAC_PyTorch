@@ -174,7 +174,9 @@ class AWRAgent:
                 tars = t(tds[indices])
 
                 outs = critic(ins)
-                loss = critic.backward(outs.squeeze(1), tars)
+                loss = critic.update(states, actions, None, rewards, dones, actor, tars)
+                loss = loss['Critic Training Loss']
+                # loss = critic.backward(outs.squeeze(1), tars)
                 avg_loss += loss
             avg_loss /= critic_steps
             print(f"average critic loss: {avg_loss}")
