@@ -41,7 +41,7 @@ bc_base_args_dict = dict(
     save_params = False, #@param {type: "boolean"}
 
     # Training
-    num_agent_train_steps_per_iter = 10000, #@param {type: "integer"})
+    num_agent_train_steps_per_iter = 3000, #@param {type: "integer"})
     n_iter = 1, #@param {type: "integer"})
 
     # batches & buffers
