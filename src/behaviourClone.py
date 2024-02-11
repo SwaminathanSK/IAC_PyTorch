@@ -123,4 +123,4 @@ for seed in range(1):
     bctrainer.run_training_loop()
 
 with open("bc_policy.pkl", "wb") as file:
-    pickle.dump(bctrainer.params['agent_class'].actor, file)
+    pickle.dump(bctrainer.rl_trainer.agent.actor, file)
