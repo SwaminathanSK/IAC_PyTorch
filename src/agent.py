@@ -20,7 +20,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 from torch.autograd import Variable
 from torchvision import transforms
-from src.utilities.prioritized_memory import Memory
+from utilities.prioritized_memory import Memory
 import math
 import pickle
 from utilities import utils
