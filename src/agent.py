@@ -283,7 +283,7 @@ class AWRAgent:
 
         # rho = AWRAgent.get_policy_density(current_policy, action, state)-AWRAgent.get_policy_density(beta_policy, action, state, 1)
         # rho = math.exp(rho)
-        out = np.array([state, torch.tensor(action), reward, next_state, done], dtype=object)
+        out = np.array([state, torch.Tensor(action), reward, next_state, done], dtype=object)
 
         memory.add(1, out)
         return memory
