@@ -138,12 +138,24 @@ class AWRAgent:
                 idx = idxs[i]
                 memory.update(idx, rhos[i])
             
-            mini_batch, idxs, is_weights = memory.sample(2) # Note that we are sampling from the entire memory
+            mini_batch, idxs, is_weights = memory.sample(2)
+            # print(mini_batch)
+            mini_batch = np.array(mini_batch).transpose()
+
             states = np.vstack(mini_batch[0])
-            actions = mini_batch[1] # removed list()
-            rewards = mini_batch[2] # removed list()
+            actions = np.vstack(mini_batch[1]) # removed list()
+            rewards = list(mini_batch[2]) # removed list()
             next_states = np.vstack(mini_batch[3])
             dones = mini_batch[4]
+
+            # bool to binary
+            dones = dones.astype(int)
+
+            # Q function of current state
+            states = torch.Tensor(states)
+
+            # one-hot encoding
+            a = torch.Tensor(actions)
 
             print(f"\nEpoch: {epoch}")
 
