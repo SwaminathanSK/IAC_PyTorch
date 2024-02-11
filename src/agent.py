@@ -68,7 +68,7 @@ class AWRAgent:
         observations, actions, next_observations, terminals, concatenated_rewards, unconcatenated_rewards = AWRAgent.convert_listofrollouts(paths)
 
         for i in range(5):
-            memory = AWRAgent.append_sample(observations[i], actions[i], concatenated_rewards[i], next_observations[i], terminals[i], memory)
+            memory = AWRAgent.append_sample(observations[i], actions[i], np.array(concatenated_rewards[i]), next_observations[i], np.array(terminals[i]), memory)
 
         # algorithm specifics
         beta = hyper_ps['beta']
@@ -112,8 +112,8 @@ class AWRAgent:
             mini_batch = np.array(mini_batch).transpose()
 
             states = np.vstack(mini_batch[0])
-            actions = mini_batch[1] # removed list()
-            rewards = mini_batch[2] # removed list()
+            actions = list(mini_batch[1]) # removed list()
+            rewards = list(mini_batch[2]) # removed list()
             next_states = np.vstack(mini_batch[3])
             dones = mini_batch[4]
 
