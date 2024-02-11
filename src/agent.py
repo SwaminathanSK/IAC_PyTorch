@@ -130,7 +130,7 @@ class AWRAgent:
                 idx = idxs[i]
                 memory.update(idx, rhos[i])
             
-            mini_batch, idxs, is_weights = memory.sample(batch_size) # Note that we are sampling from the entire memory
+            mini_batch, idxs, is_weights = memory.sample(64) # Note that we are sampling from the entire memory
             states = np.vstack(mini_batch[0])
             actions = mini_batch[1] # removed list()
             rewards = mini_batch[2] # removed list()
