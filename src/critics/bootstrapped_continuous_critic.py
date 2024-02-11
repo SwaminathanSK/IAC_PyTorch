@@ -64,8 +64,8 @@ class BootstrappedContinuousCritic(Critic):
         #     self.learning_rate,
         # )
 
-    def forward(self, obs, acts):
-        return self.critic_network(torch.cat((obs, acts), axis=-1)).squeeze(1)
+    # def forward(self, obs, acts):
+    #     return self.critic_network(torch.cat((obs, acts), axis=-1)).squeeze(1)
 
     def forward_np(self, obs, acts):
         obs = ptu.from_numpy(obs)
