@@ -55,7 +55,7 @@ class Actor(Model):
         # normal = distributions.MultivariateNormal(loc=mean, scale_tril=batch_scale_tril)
         normal = distributions.Normal(loc=mean, scale=sd)
         action = normal.sample()
-        print(action)
+        # print(action)
 
         return normal, action
 

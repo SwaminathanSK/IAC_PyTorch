@@ -89,7 +89,7 @@ print("Weight before update", first_weight_before)
 for i in range(5):
     loss = policy.update(obs, acts)['Training Loss']
 
-print(loss)
+# print(loss)
 expected_loss = 2.628419
 loss_error = rel_error(loss, expected_loss)
 print("Loss Error", loss_error, "should be on the order of 1e-6 or lower")
