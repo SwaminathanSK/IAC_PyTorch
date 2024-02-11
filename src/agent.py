@@ -333,7 +333,9 @@ class AWRAgent:
         if behave == 1:
             print(policy_net.forward(state).log_prob(action))
             return policy_net.forward(state).log_prob(action)
-        normal, _ = policy_net.forward(state)
+        normal, act = policy_net.forward(state)
+        print(act)
+        print(normal.log_prob(action))
         return normal.log_prob(action)
 
     @staticmethod
