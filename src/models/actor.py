@@ -5,6 +5,8 @@ from models.model import Model
 from utilities.utils import t
 from utilities import pytorch_util as ptu
 
+import itertools
+
 
 class Actor(Model):
 
@@ -30,16 +32,23 @@ class Actor(Model):
 
         self.fc_base = nn.Sequential(*fcs)
         self.fc_mean = nn.Linear(hidden_size, action_dim)
-        self.fc_logsd = nn.Linear(hidden_size, action_dim)
-        # self.logstd = nn.Parameter(
-        #         torch.zeros(action_dim, dtype=torch.float32, device=ptu.device)
-        #     )
+        # self.fc_logsd = nn.Linear(hidden_size, action_dim)
+        self.logsd = nn.Parameter(
+                torch.zeros(action_dim, dtype=torch.float32, device=ptu.device)
+            )
+        self.fc_mean.to(ptu.device)
+        self.logsd.to(ptu.device)
 
-        self.optimiser = torch.optim.SGD(
-            lr=hyper_ps['a_learning_rate'],
-            momentum=hyper_ps['a_momentum'],
-            params=self.parameters()
-        )
+        # self.optimiser = torch.optim.SGD(
+        #     lr=hyper_ps['a_learning_rate'],
+        #     momentum=hyper_ps['a_momentum'],
+        #     params=self.parameters()
+        # )
+        self.optimizer = torch.optim.SGD(
+                itertools.chain([self.logsd], self.fc_mean.parameters()),
+                lr=hyper_ps['a_learning_rate'],
+                momentum=hyper_ps['a_momentum'],
+            )
 
     def forward(self, state):
         # state = state.view((1, -1))
@@ -48,10 +57,12 @@ class Actor(Model):
         mean = self.fc_mean(x)
         if len(x.shape) == 1:
             mean = mean.view((1, -1))
-        logsd = self.fc_logsd(x)
+        # logsd = self.fc_logsd(x)
 
+        
+        logsd = torch.clamp(self.logsd, -10, 2)
         print("logsd", logsd.shape)
-        # logsd = torch.clamp(self.logstd, -10, 2)
+        
         print("mean", mean.shape)
         scale_tril = torch.diag(torch.exp(logsd))
         print("scale_tril:", scale_tril.shape)
