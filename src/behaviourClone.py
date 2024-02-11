@@ -115,7 +115,7 @@ bc_args['env_name'] = '{}-v2'.format(env_str)
 # Delete all previous logs
 remove_folder('logs/behavior_cloning/{}'.format(env_str))
 
-for seed in range(3):
+for seed in range(1):
     print("Running behavior cloning experiment with seed", seed)
     bc_args['seed'] = seed
     bc_args['logdir'] = 'logs/behavior_cloning/{}/seed{}'.format(env_str, seed)
