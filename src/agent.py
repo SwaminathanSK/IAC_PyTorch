@@ -123,7 +123,7 @@ class AWRAgent:
             # Q function of current state
             states = torch.Tensor(states)
 
-            rhos = AWRAgent.get_policy_density(actor, actions, states)-AWRAgent.get_policy_density(beta_policy, actions, states, 1)
+            rhos = AWRAgent.get_policy_density(actor, torch.tensor(actions), torch.tensor(states))-AWRAgent.get_policy_density(beta_policy, torch.tensor(actions), torch.tensor(states), 1)
             rhos = math.exp(rhos)
 
             # memory = AWRAgent.append_sample()
