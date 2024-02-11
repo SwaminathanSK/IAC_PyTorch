@@ -28,7 +28,7 @@ from utilities import utils
 
 class AWRAgent:
 
-    with open("bc_policy.pkl", "wb") as file:
+    with open("bc_policy.pkl", "rb") as file:
         beta_policy = pickle.load(file)
 
     name = "awr"
