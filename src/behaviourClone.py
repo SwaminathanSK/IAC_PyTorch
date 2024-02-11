@@ -68,8 +68,8 @@ bc_base_args_dict = dict(
 
 ### Basic test for correctness of loss and gradients
 torch.manual_seed(0)
-ac_dim = 2
-ob_dim = 3
+ac_dim = 6
+ob_dim = 17
 batch_size = 5
 
 policy = MLPPolicySL(
