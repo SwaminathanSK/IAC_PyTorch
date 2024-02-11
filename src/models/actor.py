@@ -51,6 +51,7 @@ class Actor(Model):
         # logsd = torch.clamp(self.logstd, -10, 2) 
         print("mean", mean.shape)
         scale_tril = torch.diag(torch.exp(logsd))
+        print("scale_tril:", scale_tril.shape)
         batch_dim = mean.shape[0]
         batch_scale_tril = scale_tril.repeat(batch_dim, 1)
         print(batch_scale_tril.shape)
