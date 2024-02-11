@@ -32,7 +32,7 @@ class Actor(Model):
         self.fc_mean = nn.Linear(hidden_size, action_dim)
         # self.fc_logsd = nn.Linear(hidden_size, action_dim)
         self.logstd = nn.Parameter(
-                torch.zeros(self.ac_dim, dtype=torch.float32, device=ptu.device)
+                torch.zeros(action_dim, dtype=torch.float32, device=ptu.device)
             )
 
         self.optimiser = torch.optim.SGD(
