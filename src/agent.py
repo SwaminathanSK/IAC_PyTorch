@@ -67,8 +67,10 @@ class AWRAgent:
         paths = utils.sample_n_trajectories(environment, beta_policy, ntraj, max_path_length)
         observations, actions, next_observations, terminals, concatenated_rewards, unconcatenated_rewards = AWRAgent.convert_listofrollouts(paths)
 
-        for i in range(2):
+        for i in range(len(observations)):
             memory = AWRAgent.append_sample(observations[i], actions[i], np.array(concatenated_rewards[i]), next_observations[i], np.array(terminals[i]), memory)
+        
+        memory_batch_size = len(observations)
 
         # algorithm specifics
         beta = hyper_ps['beta']
@@ -107,7 +109,7 @@ class AWRAgent:
 
         while epoch < max_epoch_count + pre_training_epochs:
 
-            mini_batch, idxs, is_weights = memory.sample(2)
+            mini_batch, idxs, is_weights = memory.sample(memory_batch_size)
             # print(mini_batch)
             mini_batch = np.array(mini_batch).transpose()
 
@@ -134,11 +136,11 @@ class AWRAgent:
             rhos = np.exp(rhos.detach().numpy())
 
             # memory = AWRAgent.append_sample()
-            for i in range(2):
+            for i in range(memory_batch_size):
                 idx = idxs[i]
                 memory.update(idx, rhos[i])
             
-            mini_batch, idxs, is_weights = memory.sample(2)
+            mini_batch, idxs, is_weights = memory.sample(memory_batch_size)
             # print(mini_batch)
             mini_batch = np.array(mini_batch).transpose()
 
