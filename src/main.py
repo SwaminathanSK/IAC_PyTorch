@@ -3,7 +3,7 @@ import d4rl
 
 from agent import AWRAgent
 from models.actor import Actor
-from src.trash.critic import Critic
+# from src.trash.critic import Critic
 from critics.bootstrapped_continuous_critic import BootstrappedContinuousCritic
 from utilities.debug import DebugType
 from utilities.training import Training
