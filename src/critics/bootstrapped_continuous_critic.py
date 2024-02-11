@@ -131,9 +131,9 @@ class BootstrappedContinuousCritic(Critic):
         # target_value = self.compute_target_value(next_obs, rewards, terminals, actor)
         target_value = target_value
         loss = self.loss(q_pred, target_value.detach())
-        self.optimizer.zero_grad()
+        self.optimiser.zero_grad()
         loss.backward()
-        self.optimizer.step()
+        self.optimiser.step()
 
         # update target Q function with exponential moving average
         self.update_target_network_ema()
