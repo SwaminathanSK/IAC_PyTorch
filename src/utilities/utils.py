@@ -6,7 +6,7 @@ import copy
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-def t(v, dtype=None, device=device, requires_grad=False):
+def t(v, dtype=torch.float32, device=device, requires_grad=False):
     """Shortcut for tensor instantiation with device."""
     return torch.tensor(v, device=device, dtype=dtype, requires_grad=requires_grad)
 
