@@ -30,10 +30,10 @@ class Actor(Model):
 
         self.fc_base = nn.Sequential(*fcs)
         self.fc_mean = nn.Linear(hidden_size, action_dim)
-        # self.fc_logsd = nn.Linear(hidden_size, action_dim)
-        self.logstd = nn.Parameter(
-                torch.zeros(action_dim, dtype=torch.float32, device=ptu.device)
-            )
+        self.fc_logsd = nn.Linear(hidden_size, action_dim)
+        # self.logstd = nn.Parameter(
+        #         torch.zeros(action_dim, dtype=torch.float32, device=ptu.device)
+        #     )
 
         self.optimiser = torch.optim.SGD(
             lr=hyper_ps['a_learning_rate'],
@@ -44,15 +44,16 @@ class Actor(Model):
     def forward(self, state):
         x = self.fc_base(state)
         mean = self.fc_mean(x)
-        # logsd = self.fc_logsd(x)
-        logsd = torch.clamp(self.logstd, -10, 2) 
-        # sd = logsd.exp()
+        logsd = self.fc_logsd(x)
+        # logsd = torch.clamp(self.logstd, -10, 2) 
+        sd = logsd.exp()
 
-        scale_tril = torch.diag(torch.exp(logsd))
-        batch_dim = mean.shape[0]
-        batch_scale_tril = scale_tril.repeat(batch_dim, 1, 1)
+        # scale_tril = torch.diag(torch.exp(logsd))
+        # batch_dim = mean.shape[0]
+        # batch_scale_tril = scale_tril.repeat(batch_dim, 1, 1)
 
-        normal = distributions.MultivariateNormal(loc=mean, scale_tril=batch_scale_tril)
+        # normal = distributions.MultivariateNormal(loc=mean, scale_tril=batch_scale_tril)
+        normal = distributions.Normal(loc=mean, scale=sd)
         action = normal.sample()
         print(action)
 

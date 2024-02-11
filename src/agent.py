@@ -308,7 +308,7 @@ class AWRAgent:
             if exploration:
                 action = t(env.action_space.sample())
             else:
-                notmal, action = actor_model.evaluate(state)
+                normal, action = actor_model.evaluate(state)
             res = env.step(action.cpu().numpy())
 
             reward = res[1]
