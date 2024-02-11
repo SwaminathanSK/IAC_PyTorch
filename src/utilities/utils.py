@@ -253,6 +253,7 @@ def sample_trajectory(env, policy, max_path_length, render=False, render_mode=('
         print(obs)
         if policy:
             ac = policy.get_action(ob)
+            print(ac)
             ac = ac[0]
         else:
             ac = env.action_space.sample()
