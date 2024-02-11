@@ -284,7 +284,7 @@ class AWRAgent:
         # rho = AWRAgent.get_policy_density(current_policy, action, state)-AWRAgent.get_policy_density(beta_policy, action, state, 1)
         # rho = math.exp(rho)
 
-        memory.add(1, np.array([state, action, reward, next_state, done]))
+        memory.add(1, np.array([list(state), list(action), list(reward), list(next_state), list(done)]))
         return memory
 
     @staticmethod
