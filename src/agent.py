@@ -131,7 +131,7 @@ class AWRAgent:
             print("satates shape: ", states.shape)
             rhos = AWRAgent.get_policy_density(actor, a, states)-AWRAgent.get_policy_density(beta_policy, a, states, 1)
             print(rhos)
-            rhos = math.exp(rhos)
+            rhos = torch.exp(rhos)
 
             # memory = AWRAgent.append_sample()
             for i in range(2):

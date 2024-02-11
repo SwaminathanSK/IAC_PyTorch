@@ -52,7 +52,7 @@ class Actor(Model):
 
     def forward(self, state):
         # state = state.view((1, -1))
-        print("state", state.shape)
+        # print("state", state.shape)
         x = self.fc_base(state)
         mean = self.fc_mean(x)
         if len(x.shape) == 1:
@@ -61,15 +61,15 @@ class Actor(Model):
 
         
         logsd = torch.clamp(self.logsd, -10, 2)
-        print("logsd", logsd.shape)
-        
-        print("mean", mean.shape)
+        # print("logsd", logsd.shape)
+
+        # print("mean", mean.shape)
         scale_tril = torch.diag(torch.exp(logsd))
-        print("scale_tril:", scale_tril.shape)
+        # print("scale_tril:", scale_tril.shape)
         batch_dim = mean.shape[0]
         batch_scale_tril = scale_tril.repeat(batch_dim, 1, 1)
-        print(batch_scale_tril.shape)
-        print(mean, batch_scale_tril)
+        # print(batch_scale_tril.shape)
+        # print(mean, batch_scale_tril)
 
         normal = distributions.MultivariateNormal(loc=mean, 
                                                   scale_tril=batch_scale_tril
@@ -78,7 +78,7 @@ class Actor(Model):
         action = normal.sample()
         if action.shape[0] == 1:
             action = action[0]
-        print("action : ", action)
+        # print("action : ", action)
 
         return normal, action
 
