@@ -70,7 +70,7 @@ class AWRAgent:
         for i in range(len(observations)):
             memory = AWRAgent.append_sample(observations[i], actions[i], np.array(concatenated_rewards[i]), next_observations[i], np.array(terminals[i]), memory)
         
-        memory_batch_size = len(observations)
+        memory_batch_size = 64
 
         # algorithm specifics
         beta = hyper_ps['beta']
