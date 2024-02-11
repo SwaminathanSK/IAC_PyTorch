@@ -46,6 +46,7 @@ class Actor(Model):
         x = self.fc_base(state)
         mean = self.fc_mean(x)
         logsd = self.fc_logsd(x)
+        print("logsd", logsd.shape)
         # logsd = torch.clamp(self.logstd, -10, 2) 
         sd = logsd.exp()
         print("mean", mean.shape)
