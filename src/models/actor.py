@@ -42,11 +42,13 @@ class Actor(Model):
         )
 
     def forward(self, state):
-        state = state.view((1, -1))
+        # state = state.view((1, -1))
         print("state", state.shape)
         x = self.fc_base(state)
         mean = self.fc_mean(x)
+        mean = mean.view((1, -1))
         logsd = self.fc_logsd(x)
+
         print("logsd", logsd.shape)
         # logsd = torch.clamp(self.logstd, -10, 2) 
         print("mean", mean.shape)
