@@ -59,6 +59,7 @@ class Training:
         else:
             hyper_ps['state_dim'] = environment.observation_space.shape[0]
         hyper_ps['action_dim'] = environment.action_space.shape[0]
+        print(hyper_ps['action_dim'])
 
         # passing the hyper-parameters to the models
         for m in models:
