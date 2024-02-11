@@ -44,7 +44,7 @@ class Actor(Model):
         #     momentum=hyper_ps['a_momentum'],
         #     params=self.parameters()
         # )
-        self.optimizer = torch.optim.SGD(
+        self.optimiser = torch.optim.SGD(
                 itertools.chain([self.logsd], self.fc_mean.parameters()),
                 lr=hyper_ps['a_learning_rate'],
                 momentum=hyper_ps['a_momentum'],
