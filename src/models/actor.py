@@ -64,7 +64,7 @@ class Actor(Model):
                                                   )
         # normal = distributions.Normal(loc=mean, scale=sd)
         action = normal.sample()
-        action = action.view((-1, 1))
+        action = action[0]
         print(action)
 
         return normal, action
