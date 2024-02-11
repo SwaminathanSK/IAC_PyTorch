@@ -337,7 +337,7 @@ class AWRAgent:
     @staticmethod
     def get_policy_density(policy_net, action, state, behave = 0):
         if behave == 1:
-            print(policy_net.forward(state).log_prob(action))
+            # print(policy_net.forward(state).log_prob(action))
             return policy_net.forward(state).log_prob(action)
         normal, act = policy_net.forward(state)
         # print(act)
