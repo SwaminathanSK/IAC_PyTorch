@@ -68,8 +68,8 @@ bc_base_args_dict = dict(
 
 ### Basic test for correctness of loss and gradients
 torch.manual_seed(0)
-ac_dim = 6
-ob_dim = 17
+ac_dim = 2
+ob_dim = 3
 batch_size = 5
 
 policy = MLPPolicySL(
@@ -123,4 +123,4 @@ for seed in range(1):
     bctrainer.run_training_loop()
 
 with open("bc_policy.pkl", "wb") as file:
-    pickle.dump(policy, file)
+    pickle.dump(bctrainer.params['agent_class'].actor, file)
