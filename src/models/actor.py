@@ -51,11 +51,11 @@ class Actor(Model):
         sd = logsd.exp()
         print("mean", mean.shape)
         scale_tril = torch.diag(torch.exp(logsd))
-        batch_dim = mean.shape[0]
+        batch_dim = 1
         batch_scale_tril = scale_tril.repeat(batch_dim, 1, 1)
 
-        # normal = distributions.MultivariateNormal(loc=mean, scale_tril=batch_scale_tril)
-        normal = distributions.Normal(loc=mean, scale=sd)
+        normal = distributions.MultivariateNormal(loc=mean, scale_tril=batch_scale_tril)
+        # normal = distributions.Normal(loc=mean, scale=sd)
         action = normal.sample()
         # print(action)
 

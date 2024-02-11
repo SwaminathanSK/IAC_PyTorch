@@ -128,7 +128,7 @@ class AWRAgent:
 
             # one_hot_action = torch.FloatTensor(2, 6).zero_()
             # one_hot_action.scatter_(1, a, 1)
-
+            print("satates shape: ", states.shape)
             rhos = AWRAgent.get_policy_density(actor, a, states)-AWRAgent.get_policy_density(beta_policy, a, states, 1)
             rhos = math.exp(rhos)
 
