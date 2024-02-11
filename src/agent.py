@@ -340,8 +340,8 @@ class AWRAgent:
             print(policy_net.forward(state).log_prob(action))
             return policy_net.forward(state).log_prob(action)
         normal, act = policy_net.forward(state)
-        print(act)
-        print(normal.log_prob(action))
+        # print(act)
+        # print(normal.log_prob(action))
         return normal.log_prob(action).view(-1)
 
 
