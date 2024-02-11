@@ -126,10 +126,10 @@ class AWRAgent:
             # one-hot encoding
             a = torch.FloatTensor(actions).view(-1, 1)
 
-            one_hot_action = torch.FloatTensor(2, 6).zero_()
-            one_hot_action.scatter_(1, a, 1)
+            # one_hot_action = torch.FloatTensor(2, 6).zero_()
+            # one_hot_action.scatter_(1, a, 1)
 
-            rhos = AWRAgent.get_policy_density(actor, one_hot_action, states)-AWRAgent.get_policy_density(beta_policy, one_hot_action, states, 1)
+            rhos = AWRAgent.get_policy_density(actor, a, states)-AWRAgent.get_policy_density(beta_policy, a, states, 1)
             rhos = math.exp(rhos)
 
             # memory = AWRAgent.append_sample()
