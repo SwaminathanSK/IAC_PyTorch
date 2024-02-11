@@ -52,7 +52,7 @@ environment = gym.make("halfcheetah-expert-v2")
 # setting up the training components
 agent = AWRAgent
 actor = Actor()
-critic = BootstrappedContinuousCritic()
+critic = BootstrappedContinuousCritic({'target_update_rate' : 1})
 
 
 # training and testing

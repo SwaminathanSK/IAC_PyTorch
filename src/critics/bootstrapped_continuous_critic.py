@@ -24,18 +24,18 @@ class BootstrappedContinuousCritic(Critic):
     """
     def __init__(self, hparams):
         super().__init__()
-        self.ob_dim = hparams['ob_dim']
-        self.ac_dim = hparams['ac_dim']
-        self.discrete = hparams['discrete']
-        self.size = hparams['critic_size']
-        self.n_layers = hparams['critic_n_layers']
-        self.learning_rate = hparams['learning_rate']
+        # self.ob_dim = hparams['ob_dim']
+        # self.ac_dim = hparams['ac_dim']
+        # self.discrete = hparams['discrete']
+        # self.size = hparams['critic_size']
+        # self.n_layers = hparams['critic_n_layers']
+        # self.learning_rate = hparams['learning_rate']
 
         # critic parameters
         self.target_update_rate = hparams['target_update_rate']
         # self.num_target_updates = hparams['num_target_updates']
         # self.num_grad_steps_per_target_update = hparams['num_grad_steps_per_target_update']
-        self.gamma = hparams['gamma']
+        # self.gamma = hparams['gamma']
         # self.critic_network = ptu.build_mlp(
         #     self.ob_dim + self.ac_dim,
         #     1,
