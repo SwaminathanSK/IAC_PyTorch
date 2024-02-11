@@ -42,6 +42,18 @@ class BootstrappedContinuousCritic(Critic):
         #     n_layers=self.n_layers,
         #     size=self.size,
         # )
+        # self.critic_network = self.fc
+        # self.critic_network.to(ptu.device)
+        # self.target_network = copy.deepcopy(self.critic_network)
+        # # self.loss = nn.SmoothL1Loss()
+        # self.loss = nn.MSELoss()
+        # self.optimizer = optim.Adam(
+        #     self.critic_network.parameters(),
+        #     self.learning_rate,
+        # )
+    
+    def set_params(self, hyper_ps):
+        super().set_params(hyper_ps)
         self.critic_network = self.fc
         self.critic_network.to(ptu.device)
         self.target_network = copy.deepcopy(self.critic_network)
