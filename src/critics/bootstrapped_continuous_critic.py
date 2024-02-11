@@ -126,7 +126,8 @@ class BootstrappedContinuousCritic(Critic):
         # next_obs = ptu.from_numpy(next_obs)
         rewards = ptu.from_numpy(rewards)
         terminals = ptu.from_numpy(terminals)
-        target_value = ptu.from_numpy(target_value)
+        # target_value = ptu.from_numpy(target_value)
+        target_value = target_value
 
         print("Reached here")
 
