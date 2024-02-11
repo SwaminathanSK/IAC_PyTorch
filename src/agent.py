@@ -199,7 +199,7 @@ class AWRAgent:
                 tars = t(tds[indices])
 
                 outs = critic(ins)
-                loss = critic.update(states, actions, None, rewards, dones, actor, tars)
+                loss = critic.update(states.__float__, actions, None, rewards, dones, actor, tars)
                 loss = loss['Critic Training Loss']
                 # loss = critic.backward(outs.squeeze(1), tars)
                 avg_loss += loss
