@@ -42,7 +42,7 @@ hyper_ps = {
 }
 
 # configuring the environment
-environment = gym.make("ant-expert-v0")
+environment = gym.make("halfcheetah-expert-v2")
 # environment._max_episode_steps = 600
 
 # behavioural = AWRAgent

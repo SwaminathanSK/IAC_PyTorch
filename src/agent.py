@@ -23,6 +23,7 @@ from torchvision import transforms
 from src.utilities.prioritized_memory import Memory
 import math
 import pickle
+from utilities import utils
 
 
 class AWRAgent:
@@ -59,8 +60,15 @@ class AWRAgent:
         memory = Memory(memory_size)
         batch_size = 64
 
-        for i in range(20000):
-            break
+        # for i in range(20000):
+        #     break
+        ntraj = 1000
+        max_path_length = 100
+        paths = utils.sample_n_trajectories(environment, beta_policy, ntraj, max_path_length)
+        observations, actions, next_observations, terminals, concatenated_rewards, unconcatenated_rewards = AWRAgent.convert_listofrollouts(paths)
+
+        for i in range(len(observations)):
+            memory = AWRAgent.append_sample(observations[i], actions[i], concatenated_rewards[i], next_observations[i], terminals[i], memory)
 
         # algorithm specifics
         beta = hyper_ps['beta']
@@ -322,4 +330,20 @@ class AWRAgent:
         #     return policy_net.actor.forward(state).log_prob(action)
         normal, _ = policy_net.forward(state)
         return normal.log_prob(action)
-        
+
+    @staticmethod
+    def convert_listofrollouts(paths):
+        """
+            Take a list of rollout dictionaries
+            and return separate arrays,
+            where each array is a concatenation of that array from across the rollouts
+        """
+        observations = np.concatenate([path["observation"] for path in paths])
+        actions = np.concatenate([path["action"] for path in paths])
+        next_observations = np.concatenate([path["next_observation"] for path in paths])
+        terminals = np.concatenate([path["terminal"] for path in paths])
+        concatenated_rewards = np.concatenate([path["reward"] for path in paths])
+        unconcatenated_rewards = [path["reward"] for path in paths]
+
+        return observations, actions, next_observations, terminals, concatenated_rewards, unconcatenated_rewards
+            
