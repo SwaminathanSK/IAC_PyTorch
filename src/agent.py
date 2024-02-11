@@ -174,8 +174,8 @@ class AWRAgent:
             #         replay_buffers=(states, actions, rewards, dones)
             #     )
 
-            if len(states) < replay_fill_threshold * max_buffer_size:
-                continue
+            # if len(states) < replay_fill_threshold * max_buffer_size:
+            #     continue
 
             dq_states = states
             states = np.array(states)
