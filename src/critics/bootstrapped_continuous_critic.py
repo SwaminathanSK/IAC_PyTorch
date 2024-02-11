@@ -99,7 +99,11 @@ class BootstrappedContinuousCritic(Critic):
         x_target <- (1-alpha) * x_target + alpha * x_current
         where alpha is self.target_update_rate.
         """
-        self.target_network.parameters = (1-self.target_update_rate) * self.target_network.parameters + self.target_update_rate * self.critic_network.parameters
+        with torch.no_grad():
+            for p,q in zip(self.target_network.parameters(), self.critic_network.parameters()):
+                new_val = (1-self.target_update_rate)*p + self.target_update_rate*q
+                p.copy_(new_val)
+        # self.target_network.parameters = (1-self.target_update_rate) * self.target_network.parameters + self.target_update_rate * self.critic_network.parameters
         """
         END CODE
         """
