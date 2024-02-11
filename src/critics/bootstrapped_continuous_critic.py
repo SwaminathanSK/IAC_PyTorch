@@ -126,6 +126,8 @@ class BootstrappedContinuousCritic(Critic):
         rewards = ptu.from_numpy(rewards)
         terminals = ptu.from_numpy(terminals)
 
+        print("Reached here")
+
         # q_pred = self.critic_network(torch.cat((obs, acts), dim=-1)).squeeze(1)
         q_pred = self.critic_network(obs)
         # target_value = self.compute_target_value(next_obs, rewards, terminals, actor)
