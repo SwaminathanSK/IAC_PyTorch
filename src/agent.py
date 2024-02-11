@@ -124,7 +124,7 @@ class AWRAgent:
             states = torch.Tensor(states)
 
             # one-hot encoding
-            a = torch.Tensor(actions)
+            a = torch.Tensor(actions.astype(np.float32))
 
             # one_hot_action = torch.FloatTensor(2, 6).zero_()
             # one_hot_action.scatter_(1, a, 1)
