@@ -78,8 +78,8 @@ class AWRAgent:
         critic_steps_end = hyper_ps['critic_steps_end']
         actor_steps_start = hyper_ps['actor_steps_start']
         actor_steps_end = hyper_ps['actor_steps_end']
-        # batch_size = hyper_ps['batch_size']
-        batch_size = 64
+        batch_size = hyper_ps['batch_size']
+        # batch_size = 64
         max_advantage_weight = hyper_ps['max_advantage_weight']
         min_log_pi = hyper_ps['min_log_pi']
 
