@@ -342,7 +342,8 @@ class AWRAgent:
         normal, act = policy_net.forward(state)
         print(act)
         print(normal.log_prob(action))
-        return normal.log_prob(action)
+        return normal.log_prob(action).view(-1)
+
 
     @staticmethod
     def convert_listofrollouts(paths):
