@@ -49,23 +49,24 @@ class Actor(Model):
         mean = mean.view((1, -1))
         logsd = self.fc_logsd(x)
 
-        print("logsd", logsd.shape)
-        # logsd = torch.clamp(self.logstd, -10, 2) 
-        print("mean", mean.shape)
+        # print("logsd", logsd.shape)
+        # logsd = torch.clamp(self.logstd, -10, 2)
+        # print("mean", mean.shape)
         scale_tril = torch.diag(torch.exp(logsd))
-        print("scale_tril:", scale_tril.shape)
+        # print("scale_tril:", scale_tril.shape)
         batch_dim = mean.shape[0]
         batch_scale_tril = scale_tril.repeat(batch_dim, 1, 1)
-        print(batch_scale_tril.shape)
-        print(mean, batch_scale_tril)
+        # print(batch_scale_tril.shape)
+        # print(mean, batch_scale_tril)
 
         normal = distributions.MultivariateNormal(loc=mean, 
                                                   scale_tril=batch_scale_tril
                                                   )
         # normal = distributions.Normal(loc=mean, scale=sd)
         action = normal.sample()
-        action = action[0]
-        print(action)
+        if action.shape[0] == 1:
+            action = action[0]
+        # print(action)
 
         return normal, action
 
