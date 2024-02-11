@@ -108,7 +108,7 @@ class AWRAgent:
         while epoch < max_epoch_count + pre_training_epochs:
 
             mini_batch, idxs, is_weights = memory.sample(2)
-            print(mini_batch)
+            # print(mini_batch)
             mini_batch = np.array(mini_batch).transpose()
 
             states = np.vstack(mini_batch[0])
