@@ -41,9 +41,13 @@ class Actor(Model):
         x = self.fc_base(state)
         mean = self.fc_mean(x)
         logsd = self.fc_logsd(x)
-        sd = logsd.exp()
+        # sd = logsd.exp()
 
-        normal = distributions.Normal(loc=mean, scale=sd)
+        scale_tril = torch.diag(torch.exp(logsd))
+        batch_dim = mean.shape[0]
+        batch_scale_tril = scale_tril.repeat(batch_dim, 1, 1)
+
+        normal = distributions.MultivariateNormal(loc=mean, scale_tril=batch_scale_tril)
         action = normal.sample()
 
         return normal, action
