@@ -42,7 +42,7 @@ class Actor(Model):
         )
 
     def forward(self, state):
-        state.view((1, -1))
+        state = state.view((1, -1))
         print("state", state.shape)
         x = self.fc_base(state)
         mean = self.fc_mean(x)
