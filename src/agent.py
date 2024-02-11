@@ -309,6 +309,7 @@ class AWRAgent:
                 action = t(env.action_space.sample())
             else:
                 normal, action = actor_model.evaluate(state)
+            print(action.shape)
             res = env.step(action.cpu().numpy())
 
             reward = res[1]
