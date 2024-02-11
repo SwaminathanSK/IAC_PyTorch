@@ -59,10 +59,10 @@ class BootstrappedContinuousCritic(Critic):
         self.target_network = copy.deepcopy(self.critic_network)
         # self.loss = nn.SmoothL1Loss()
         self.loss = nn.MSELoss()
-        self.optimizer = optim.Adam(
-            self.critic_network.parameters(),
-            self.learning_rate,
-        )
+        # self.optimizer = optim.Adam(
+        #     self.critic_network.parameters(),
+        #     self.learning_rate,
+        # )
 
     def forward(self, obs, acts):
         return self.critic_network(torch.cat((obs, acts), axis=-1)).squeeze(1)
