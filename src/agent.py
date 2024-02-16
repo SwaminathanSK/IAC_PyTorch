@@ -55,7 +55,7 @@ class AWRAgent:
         pre_training_epochs = 0
         max_pre_epochs = 150
 
-        memory_size = 2
+        memory_size = 100000
         # create prioritized replay memory using SumTree
         memory = Memory(memory_size)
         # batch_size = 5
