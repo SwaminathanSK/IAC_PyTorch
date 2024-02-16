@@ -324,7 +324,7 @@ class AWRAgent:
     #     # a = torch_utils.to_np(a)
     #     return a
     
-    def eval_episode(actor_model, env, timeout=1000, log_traj=False):
+    def eval_episode(actor_model, env, timeout=10000, log_traj=False):
         mean_avg_return = 0
         for i in range(5):
             ep_traj = []
