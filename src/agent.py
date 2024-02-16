@@ -335,7 +335,7 @@ class AWRAgent:
             while True:
                 action = AWRAgent.eval_step(actor_model, state)
                 last_state = state
-                state, reward, done, _ = env.step([action])
+                state, reward, done, _ = env.step(action)
                 # print(np.abs(state-last_state).sum(), "\n",action)
                 # if log_traj:
                 #     ep_traj.append([last_state, action, reward])
