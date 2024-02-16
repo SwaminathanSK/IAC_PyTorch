@@ -69,7 +69,7 @@ hyper_ps = {
     'replay_fill_threshold': 1.,
     'random_exploration': True,
     'test_iterations': 30,
-    'validation_epoch_mod': 3,
+    'validation_epoch_mod': 1,
 }
 
 # configuring the environment

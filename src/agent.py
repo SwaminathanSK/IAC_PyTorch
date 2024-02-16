@@ -267,15 +267,16 @@ class AWRAgent:
             epoch += 1
 
             if critic_suffices and epoch % validation_epoch_mod == 0:
-                AWRAgent.compute_validation_return(
-                    actor,
-                    environment,
-                    hyper_ps,
-                    debug_type,
-                    test_iterations,
-                    epoch,
-                    writer
-                )
+                print("avg_return: ", AWRAgent.eval_episode(actor, environment))
+                # AWRAgent.compute_validation_return(
+                #     actor,
+                #     environment,
+                #     hyper_ps,
+                #     debug_type,
+                #     test_iterations,
+                #     epoch,
+                #     writer
+                # )
 
             states = dq_states
             actions = dq_actions
@@ -308,6 +309,43 @@ class AWRAgent:
 
         sample_return /= iterations
         return sample_return
+    
+    def eval_step(actor_model, state):
+        state = t(state)
+        with torch.no_grad():
+            _, a = actor_model.forward(state)
+        # a = self.policy(state, eval=True)
+        return a.cpu().numpy()
+
+    # def policy(agent_model, o, eval=False):
+    #     # o = torch_utils.tensor(self.state_normalizer(o), self.device)
+    #     with torch.no_grad():
+    #         a, _ = (o, deterministic=eval)
+    #     # a = torch_utils.to_np(a)
+    #     return a
+    
+    def eval_episode(actor_model, env, timeout=1000, log_traj=False):
+        mean_avg_return = 0
+        for i in range(5):
+            ep_traj = []
+            state = env.reset()
+            total_rewards = 0
+            ep_steps = 0
+            done = False
+            while True:
+                action = AWRAgent.eval_step(actor_model, state)
+                last_state = state
+                state, reward, done, _ = env.step([action])
+                # print(np.abs(state-last_state).sum(), "\n",action)
+                # if log_traj:
+                #     ep_traj.append([last_state, action, reward])
+                total_rewards += reward
+                ep_steps += 1
+                if done or ep_steps == timeout:
+                    break
+            mean_avg_return += total_rewards
+
+        return mean_avg_return/5
     
     # save sample (error,<s,a,r,s'>) to the replay memory
     @staticmethod
