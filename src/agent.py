@@ -62,7 +62,7 @@ class AWRAgent:
 
         # for i in range(20000):
         #     break
-        ntraj = 100
+        ntraj = 200
         max_path_length = 1000
         paths = utils.sample_n_trajectories(environment, beta_policy, ntraj, max_path_length)
         observations, actions, next_observations, terminals, concatenated_rewards, unconcatenated_rewards = AWRAgent.convert_listofrollouts(paths)
