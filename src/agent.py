@@ -63,7 +63,7 @@ class AWRAgent:
         # for i in range(20000):
         #     break
         ntraj = 100
-        max_path_length = 100000
+        max_path_length = 1000
         paths = utils.sample_n_trajectories(environment, beta_policy, ntraj, max_path_length)
         observations, actions, next_observations, terminals, concatenated_rewards, unconcatenated_rewards = AWRAgent.convert_listofrollouts(paths)
 
@@ -186,13 +186,17 @@ class AWRAgent:
             actions = np.array(actions)
             dq_rewards = rewards
             rewards = np.array(rewards)
+            dq_next_states = next_states
+            next_states = np.array(next_states)
 
             print("Reached here")
 
             # training the critic
             avg_loss = 0.
             state_values = np.array(critic.evaluate(t(states)).squeeze(1).cpu())
-            tds = td_values((states, rewards, dones), state_values, hyper_ps)
+            next_state_values = np.array(critic.evaluate(t(next_states)).squeeze(1).cpu())
+
+            tds = td_values((states, rewards, dones), state_values, hyper_ps, next_state_values)
             for _ in range(critic_steps):
                 indices = random.sample(range(len(states)), batch_size)
                 ins = t(states[indices])
@@ -224,7 +228,8 @@ class AWRAgent:
                 # training the actor
                 avg_loss = 0.
                 state_values = np.array(critic.evaluate(t(states)).squeeze(1).cpu())
-                returns = td_values((states, rewards, dones), state_values, hyper_ps)
+                next_state_values = np.array(critic.evaluate(t(next_states)).squeeze(1).cpu())
+                returns = td_values((states, rewards, dones), state_values, hyper_ps, next_state_values)
                 advantages = returns - state_values
                 for _ in range(actor_steps):
                     indices = random.sample(range(len(states)), batch_size)
@@ -275,6 +280,7 @@ class AWRAgent:
             states = dq_states
             actions = dq_actions
             rewards = dq_rewards
+            next_states = dq_next_states
 
         return actor, critic
 

@@ -38,7 +38,7 @@ def mc_values(rewards, hyper_ps):
     return mcs
 
 
-def td_values(replay_buffers, state_values, hyper_ps):
+def td_values(replay_buffers, state_values, hyper_ps, next_state_values):
     """
     Gives a list of TD estimates for a given list of samples from an RL environment.
     The TD(λ) estimator is used for this computation.
@@ -62,7 +62,7 @@ def td_values(replay_buffers, state_values, hyper_ps):
     val = 0.
     for i in range(sample_count - 1, -1, -1):
         state_value = state_values[i]
-        next_value = 0. if dones[i] else state_values[i + 1]
+        next_value = 0. if dones[i] else next_state_values[i]
 
         error = rewards[i] + discount_factor * next_value - state_value
         val = alpha * error + discount_factor * lam * (1 - dones[i]) * val
