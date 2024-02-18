@@ -133,17 +133,8 @@ class MLPPolicySL(MLPPolicy):
     ):
         observations = ptu.from_numpy(observations)
         actions = ptu.from_numpy(actions)
-        """
-        TODO: compute the behavior cloning loss by maximizing the log likelihood
-        expert actions under the policy.
-        Hint: look at the documentation for torch.distributions 
-        """
         prob = self.forward(observations)
         loss = -(torch.sum(prob.log_prob(actions)))/np.shape(observations)[0]
-        """
-        END CODE
-        """
-
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
@@ -165,14 +156,8 @@ class MLPPolicyPG(MLPPolicy):
         observations = ptu.from_numpy(observations)
         actions = ptu.from_numpy(acs_na)
         adv_n = ptu.from_numpy(adv_n)
-        """
-        TODO: compute the policy gradient given already compute advantages adv_n
-        """
         prob = self.forward(observations)
         loss = -(torch.sum(prob.log_prob(actions) * adv_n))/np.shape(observations)[0]
-        """
-        END CODE
-        """
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
@@ -181,14 +166,7 @@ class MLPPolicyPG(MLPPolicy):
             # first standardize qvals to make this easier to train
             targets_n = (qvals - np.mean(qvals)) / (np.std(qvals) + 1e-8)
             targets_n = ptu.from_numpy(targets_n)
-            """
-            TODO: update the baseline value function by regressing to the values
-            Hint: see self.baseline_loss for the appropriate loss
-            """
             baseline_loss = None
-            """
-            END CODE
-            """
             self.baseline_optimizer.zero_grad()
             baseline_loss.backward()
             self.baseline_optimizer.step()
@@ -200,13 +178,6 @@ class MLPPolicyPG(MLPPolicy):
         }
 
     def run_baseline_prediction(self, observations):
-        """
-            Helper function that converts `observations` to a tensor,
-            calls the forward method of the baseline MLP,
-            and returns a np array
-            Input: `observations`: np.ndarray of size [N, 1]
-            Output: np.ndarray of size [N]
-        """
         observations = ptu.from_numpy(observations)
         pred = self.baseline(observations)
         return ptu.to_numpy(pred.squeeze())
@@ -227,18 +198,7 @@ class MLPPolicyAC(MLPPolicy):
 
     def update(self, observations, critic):
         observations = ptu.from_numpy(observations)
-        """
-        TODO: implement policy loss with learned critic. Update the policy 
-        to maximize the expected Q value of actions, using a single sample
-        from the policy for each state.
-        Hint: assuming we are in continous action spaces and using Gaussian 
-        distributions, look at the rsample function to differentiate through 
-        samples from the action distribution.
-        """
         loss = None
-        """
-        END CODE
-        """
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()

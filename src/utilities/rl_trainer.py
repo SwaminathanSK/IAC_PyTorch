@@ -259,19 +259,9 @@ class RL_Trainer(object):
     def do_relabel_with_expert(self, expert_policy, paths):
         expert_policy.to(ptu.device)
         print("\nRelabelling collected observations with labels from an expert policy...")
-        """
-        TODO: given the list of paths (see infrastructure/utils.py), relabel
-        the actions in the paths to be those chosen by the expert policy for the
-        corresponding observation.
-        Hint: use expert_policy.get_action to query the expert on an array of 
-        observations.
-        """
         paths = paths
         for path in paths:
-            path['action'] = expert_policy.get_action(path['observation'])  
-        """
-        END CODE
-        """
+            path['action'] = expert_policy.get_action(path['observation'])
         return paths
 
     ####################################

@@ -74,11 +74,6 @@ hyper_ps = {
 
 # configuring the environment
 environment = gym.make("halfcheetah-expert-v2")
-# environment._max_episode_steps = 600
-
-# behavioural = AWRAgent
-# actor = Actor()
-# critic = Critic()
 
 # setting up the training components
 agent = AWRAgent

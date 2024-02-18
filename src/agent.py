@@ -32,7 +32,6 @@ class AWRAgent:
         beta_policy = pickle.load(file)
 
     name = "awr"
-    # memory = []
 
     @staticmethod
     def train(models, environment, hyper_ps, debug_type, writer, beta_policy=beta_policy):
@@ -58,10 +57,7 @@ class AWRAgent:
         memory_size = 100000
         # create prioritized replay memory using SumTree
         memory = Memory(memory_size)
-        # batch_size = 5
 
-        # for i in range(20000):
-        #     break
         ntraj = 200
         max_path_length = 1000
         paths = utils.sample_n_trajectories(environment, beta_policy, ntraj, max_path_length)
@@ -129,9 +125,6 @@ class AWRAgent:
             # one-hot encoding
             a = torch.Tensor(actions)
 
-            # one_hot_action = torch.FloatTensor(2, 6).zero_()
-            # one_hot_action.scatter_(1, a, 1)
-            # print("satates shape: ", states.shape)
             rhos = AWRAgent.get_policy_density(actor, a, states)-AWRAgent.get_policy_density(beta_policy, a, states, 1)
             # print(rhos)
             rhos = np.exp(rhos.detach().numpy())
@@ -167,19 +160,6 @@ class AWRAgent:
             critic_steps = critic_steps_start + int((critic_steps_end - critic_steps_start) * epoch_percentage)
             actor_steps = actor_steps_start + int((actor_steps_end - actor_steps_start) * epoch_percentage)
 
-            # # sampling from env
-            # for _ in range(sample_mod):
-            #     AWRAgent.sample_from_env(
-            #         actor,
-            #         environment,
-            #         debug_full,
-            #         exploration=random_exploration and len(states) < replay_fill_threshold * max_buffer_size,
-            #         replay_buffers=(states, actions, rewards, dones)
-            #     )
-
-            # if len(states) < replay_fill_threshold * max_buffer_size:
-            #     continue
-
             dq_states = states
             states = np.array(states)
             dq_actions = actions
@@ -205,7 +185,6 @@ class AWRAgent:
                 outs = critic(ins)
                 loss = critic.update(states, actions, None, rewards, dones, actor, tars)
                 loss = loss['Critic Training Loss']
-                # loss = critic.backward(outs.squeeze(1), tars)
                 avg_loss += loss
             avg_loss /= critic_steps
             print(f"average critic loss: {avg_loss}")
@@ -239,9 +218,6 @@ class AWRAgent:
 
                     normal, _ = actor(t(states[indices]))
                     log_pis = normal.log_prob(t(actions[indices]))
-                    # print(log_pis)
-                    # log_pis = torch.sum(log_pis, dim=1)
-                    # log_pis = torch.sum(log_pis)
                     log_pis = torch.clamp(log_pis, min=min_log_pi)
 
                     losses = -log_pis * advantage_weights
@@ -268,15 +244,6 @@ class AWRAgent:
 
             if critic_suffices and epoch % validation_epoch_mod == 0:
                 print("avg_return: ", AWRAgent.eval_episode(actor, environment))
-                # AWRAgent.compute_validation_return(
-                #     actor,
-                #     environment,
-                #     hyper_ps,
-                #     debug_type,
-                #     test_iterations,
-                #     epoch,
-                #     writer
-                # )
 
             states = dq_states
             actions = dq_actions
@@ -314,15 +281,7 @@ class AWRAgent:
         state = t(state)
         with torch.no_grad():
             _, a = actor_model.forward(state)
-        # a = self.policy(state, eval=True)
         return a.cpu().numpy()
-
-    # def policy(agent_model, o, eval=False):
-    #     # o = torch_utils.tensor(self.state_normalizer(o), self.device)
-    #     with torch.no_grad():
-    #         a, _ = (o, deterministic=eval)
-    #     # a = torch_utils.to_np(a)
-    #     return a
     
     def eval_episode(actor_model, env, timeout=10000, log_traj=False):
         mean_avg_return = 0
@@ -336,9 +295,6 @@ class AWRAgent:
                 action = AWRAgent.eval_step(actor_model, state)
                 last_state = state
                 state, reward, done, _ = env.step(action)
-                # print(np.abs(state-last_state).sum(), "\n",action)
-                # if log_traj:
-                #     ep_traj.append([last_state, action, reward])
                 total_rewards += reward
                 ep_steps += 1
                 if done or ep_steps == timeout:
@@ -350,9 +306,6 @@ class AWRAgent:
     # save sample (error,<s,a,r,s'>) to the replay memory
     @staticmethod
     def append_sample(state, action, reward, next_state, done, memory):
-
-        # rho = AWRAgent.get_policy_density(current_policy, action, state)-AWRAgent.get_policy_density(beta_policy, action, state, 1)
-        # rho = math.exp(rho)
         out = np.array([state, action, reward, next_state, done], dtype=object)
 
         memory.add(1, out)
@@ -387,12 +340,6 @@ class AWRAgent:
 
             if debug:
                 env.render()
-
-        # --- for video output, frames need to be recorded in env.render() ---
-        # out = cv2.VideoWriter(f"../trained_models/video{time()}.mp4", cv2.VideoWriter_fourcc(*'DIVX'), 30, (1000, 1000))
-        # for i in frames:
-        #     out.write(i)
-        # out.release()
 
     @staticmethod
     def test(models, environment, hyper_ps, debug_type):

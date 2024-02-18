@@ -66,45 +66,6 @@ bc_base_args_dict = dict(
     logdir = 'test',
 )
 
-### Basic test for correctness of loss and gradients
-torch.manual_seed(0)
-ac_dim = 2
-ob_dim = 3
-batch_size = 5
-
-policy = MLPPolicySL(
-            ac_dim=ac_dim,
-            ob_dim=ob_dim,
-            n_layers=1,
-            size=2,
-            learning_rate=0.25)
-
-np.random.seed(0)
-obs = np.random.normal(size=(batch_size, ob_dim))
-acts = np.random.normal(size=(batch_size, ac_dim))
-
-first_weight_before = np.array(ptu.to_numpy(next(policy.mean_net.parameters())))
-print("Weight before update", first_weight_before)
-
-for i in range(5):
-    loss = policy.update(obs, acts)['Training Loss']
-
-# print(loss)
-expected_loss = 2.628419
-loss_error = rel_error(loss, expected_loss)
-print("Loss Error", loss_error, "should be on the order of 1e-6 or lower")
-
-first_weight_after = ptu.to_numpy(next(policy.mean_net.parameters()))
-print('Weight after update', first_weight_after)
-
-weight_change = first_weight_after - first_weight_before
-print("Change in weights", weight_change)
-
-expected_change = np.array([[ 0.04385546, -0.4614172,  -1.0613215 ],
-                            [ 0.20986436, -1.2060736,  -1.0026767 ]])
-updated_weight_error = rel_error(weight_change, expected_change)
-print("Weight Update Error", updated_weight_error, "should be on the order of 1e-6 or lower")
-
 bc_args = dict(bc_base_args_dict)
 
 env_str = 'HalfCheetah'
